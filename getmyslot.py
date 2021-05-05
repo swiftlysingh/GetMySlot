@@ -29,7 +29,7 @@ async def checkMentions():
             except:
                 logger.info("Clean: Skipped")
                 continue
-        else:
+        elif "subscribe" in mention.text:
             try:
                 pin = splitt[2]
                 age = int(splitt[3].split("+")[0])
@@ -47,6 +47,8 @@ async def checkMentions():
                 logger.info("Wrong tweet")
                 failedTweet.append(tweetID)
                 continue
+            else:
+                logger.info("Tweet doesnt contains SUBSCRIBE")
     df.to_csv("UserData.csv",index=False)
     logger.info("Waiting...For Mentions")
     await  asyncio.sleep(10)
