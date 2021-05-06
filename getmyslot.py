@@ -6,11 +6,14 @@ import datetime
 import asyncio
 import logging
 import sys
-import threading, queue
+import pytz
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
 logger = logging.getLogger()
-
+timezone = pytz.timezone("Asia/Kolkata")
 
 async def checkMentions():
     logger.info("Retrieving mentions")
@@ -94,8 +97,6 @@ def tweetAt(availableCapacity,vaccines,pin,date,age):
     newDF = coDF.dropna()
     tweetIDs = newDF.loc[(df["Age"]==age) & (df["Pin"]==pin),["TweetID"]]
 
-
-
     for tweetID in tweetIDs.TweetID:
         username = newDF.loc[newDF["TweetID"]==tweetID,["Username"]].Username.item()
         tweet = "@" + username + " " + reply
@@ -108,11 +109,45 @@ def tweetAt(availableCapacity,vaccines,pin,date,age):
 
     coDF.to_csv("UserData.csv",index=False)
 
+def updatePeopleVaccinated:
+
+        download_file("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv")
+        df = pd.read_csv("vaccine_doses_statewise.csv")
+        completedNumber = df[(datetime.date.today() + datetime.timedelta(days=-2)).strftime("%d/%m/%Y")].iloc[-1]
+
+        totalNumber = 1390885000
+        totalBox = 15
+        fillBox = round((completedNumber/totalNumber) * totalBox)
+        bar = ""
+        for i in range(totalBox):
+            if i < fillBox:
+                bar += "▓"
+            else:
+                bar += "░"
+        bar += " " + str(round((completedNumber/totalNumber)*100)) + "%" + "\n" + completedNumber.__str__() + " of " + totalNumber.__str__() + " people in India vaccinated"
+        api.update_status(bar)
+
+def download_file(url):
+    local_filename = url.split('/')[-1]
+    # NOTE the stream=True parameter below
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(local_filename, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                # If you have chunk encoded response uncomment if
+                # and set chunk_size parameter to None.
+                #if chunk:
+                f.write(chunk)
+    return local_filename
+
 async def run():
     await asyncio.gather(checkMentions(),checkCowin())
+    if 52000 == int(today.strftime("%w%H%M")):
+        await updatePeopleVaccinated()
     await run()
+
 if __name__ == "__main__":
-    today = datetime.datetime.today()
+    today = timezone.localize(datetime.datetime.today())
     tomorrow = today + datetime.timedelta(days=1)
     dayAfter = today + datetime.timedelta(days=2)
     dates = [today.strftime("%d-%m-%Y"), tomorrow.strftime("%d-%m-%Y"), dayAfter.strftime("%d-%m-%Y")]
