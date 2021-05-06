@@ -109,7 +109,7 @@ def tweetAt(availableCapacity,vaccines,pin,date,age):
 
     coDF.to_csv("UserData.csv",index=False)
 
-def updatePeopleVaccinated:
+def updatePeopleVaccinated():
 
         download_file("http://api.covid19india.org/csv/latest/vaccine_doses_statewise.csv")
         df = pd.read_csv("vaccine_doses_statewise.csv")
