@@ -47,8 +47,9 @@ async def checkMentions():
                 logger.info("Wrong tweet")
                 failedTweet.append(tweetID)
                 continue
-            else:
-                logger.info("Tweet doesnt contains SUBSCRIBE")
+        else:
+            logger.info("Tweet doesnt contains SUBSCRIBE")
+            failedTweet.append(tweetID)
     df.to_csv("UserData.csv",index=False)
     logger.info("Waiting...For Mentions")
     await  asyncio.sleep(10)
@@ -63,6 +64,7 @@ async def checkCowin():
             completeURL = baseURL+"date="+date + "&pincode=" + str(pin)
             try:
                 sessions = requests.get(completeURL).json()["sessions"]
+                logger.log("Got Sessions")
                 if sessions:
                     vaccines = {"COVISHIELD" : False, "COVAXIN" : False}
                     minAge = {18:False,45:False}
