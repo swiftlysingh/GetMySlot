@@ -63,8 +63,9 @@ async def checkCowin():
 
             completeURL = baseURL+"date="+date + "&pincode=" + str(pin)
             try:
+                logger.info("Getting sessions")
                 sessions = requests.get(completeURL).json()["sessions"]
-                logger.log("Got Sessions")
+                logger.info("Got Sessions")
                 if sessions:
                     vaccines = {"COVISHIELD" : False, "COVAXIN" : False}
                     minAge = {18:False,45:False}
