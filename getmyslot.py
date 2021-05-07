@@ -79,10 +79,13 @@ async def checkCowin():
                         availableCapacity = min(availableCapacity,int(session["available_capacity"]))
                         vaccines[session["vaccine"]] = True
                         minAge[session["min_age_limit"]] = True
+                        print("Still Working",minAge)
                     if minAge[18]:
                         tweetAt(availableCapacity,vaccines,pin,date,18)
                     if minAge[45]:
+                        print(availableCapacity,vaccines,pin,date,45)
                         tweetAt(availableCapacity,vaccines,pin,date,45)
+                        print("Tweeting")
 
                 logger.info("Waiting...For COWIN")
                 await asyncio.sleep(3)
@@ -93,20 +96,19 @@ async def checkCowin():
 
 
 def tweetAt(availableCapacity,vaccines,pin,date,age):
-
+    coDF= pd.read_csv("UserData.csv")
     reply = "Atleast " + str(availableCapacity) + " slot(s) for " + " and ".join([v for v,b in vaccines.items() if b == True]) + " is available for age " + str(age) + "+ at pin " + str(pin) + " for " + date
-    newDF = coDF.dropna()
-    tweetIDs = newDF.loc[(df["Age"]==age) & (df["Pin"]==pin),["TweetID"]]
-
+    tweetIDs = coDF.loc[(df["Age"]==age) & (coDF["Pin"]==pin),["TweetID"]]
     for tweetID in tweetIDs.TweetID:
-        username = newDF.loc[newDF["TweetID"]==tweetID,["Username"]].Username.item()
-        tweet = "@" + username + " " + reply
-        alert = newDF.loc[newDF["TweetID"]==tweetID, ["Alert"]].Alert.item()
-
+        username = coDF.loc[coDF["TweetID"]==tweetID,["Username"]].Username.item()
+        tweet = ".@" + username + " " + reply
+        alert = coDF.loc[coDF["TweetID"]==tweetID, ["Alert"]].Alert.item()
+        print(alert)
         if pd.isna(alert) or int(datetime.datetime.now().strftime("%d%H%M")) - alert > 100:
-            logger.info(tweet)
+            print("Tweeting")
+            print(tweetID)
             api.update_status(tweet,tweetID)
-            coDF.loc[cpDF["TweetID"]==1389614929078935562,"Alert"]  = int(datetime.datetime.now().strftime("%d%H%M"))
+            coDF.loc[coDF["TweetID"]==tweetID,"Alert"]  = int(datetime.datetime.now().strftime("%d%H%M"))
 
     coDF.to_csv("UserData.csv",index=False)
 
