@@ -54,7 +54,7 @@ async def checkMentions():
             failedTweet.append(tweetID)
     df.to_csv("UserData.csv",index=False)
     logger.info("Waiting...For Mentions")
-    await  asyncio.sleep(10)
+    await  asyncio.sleep(5)
 
 async def checkCowin():
     logger.info("Checking COWIN")
