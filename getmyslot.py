@@ -84,12 +84,14 @@ async def checkCowin():
                             await tweetAt(availableCapacity,vaccines,pin,date,45)
 
                 logger.info("Waiting...For COWIN")
+                await asyncio.sleep(3)
+                logger.info("COWIN Wait over")
             except Exception as e:
-                print(e)
+                logger.info(e)
                 logger.info("Failed to get new sessions")
                 logger.info("Waiting...For COWIN")
-            await asyncio.sleep(3)
-
+                await asyncio.sleep(3)
+                logger.info("COWIN Wait over")
 
 
 async def tweetAt(availableCapacity,vaccines,pin,date,age):
