@@ -79,12 +79,9 @@ async def checkCowin():
                         vaccines[session["vaccine"]] = True
                         minAge[session["min_age_limit"]] = True
                         if minAge[18]:
-                            logger.info("Tweeting 18")
                             await tweetAt(availableCapacity,vaccines,pin,date,18)
                         if minAge[45]:
-                            logger.info("Tweeting 45")
                             await tweetAt(availableCapacity,vaccines,pin,date,45)
-                            logger.info("Tweeted")
 
                 logger.info("Waiting...For COWIN")
             except Exception as e:
@@ -108,6 +105,7 @@ async def tweetAt(availableCapacity,vaccines,pin,date,age):
             logger.info("Tweeting")
             api.update_status(tweet,tweetID)
             coDF.loc[coDF["TweetID"]==tweetID,"Alert"]  = int(datetime.datetime.now().strftime("%d%H%M"))
+            logger.info("Tweeted Successfully")
 
     coDF.to_csv("UserData.csv",index=False)
 
