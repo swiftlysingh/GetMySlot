@@ -69,6 +69,7 @@ async def checkCowin():
                 logger.info("Getting sessions")
                 sessions = requests.get(completeURL).json()["sessions"]
                 logger.info("Got Sessions")
+
                 if sessions:
                     vaccines = {"COVISHIELD" : False, "COVAXIN" : False}
                     minAge = {18:False,45:False}
@@ -83,13 +84,13 @@ async def checkCowin():
                     if minAge[45]:
                         tweetAt(availableCapacity,vaccines,pin,date,45)
 
-                else:
-                    continue
-            except:
-                logger.info("Failed to get new sessions")
-            finally:
                 logger.info("Waiting...For COWIN")
                 await asyncio.sleep(3)
+            except:
+                logger.info("Failed to get new sessions")
+                logger.info("Waiting...For COWIN")
+                await asyncio.sleep(3)
+
 
 def tweetAt(availableCapacity,vaccines,pin,date,age):
 
@@ -125,7 +126,11 @@ def updatePeopleVaccinated():
             else:
                 bar += "░"
         bar += " " + str(round((completedNumber/totalNumber)*100)) + "%" + "\n" + completedNumber.__str__() + " of " + totalNumber.__str__() + " people in India vaccinated"
-        api.update_status(bar)
+        try:
+            api.update_status(bar)
+            logger.info(bar)
+        except:
+            logger.info("Unable to update %age")
 
 def download_file(url):
     local_filename = url.split('/')[-1]
