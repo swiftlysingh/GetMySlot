@@ -67,40 +67,45 @@ async def checkCowin():
             try:
                 logger.info("Getting sessions")
                 sessions = requests.get(completeURL).json()["sessions"]
+                print(sessions)
                 logger.info("Got Sessions")
-
                 if sessions:
+                    logger.info("Processing sessions")
                     vaccines = {"COVISHIELD" : False, "COVAXIN" : False}
                     minAge = {18:False,45:False}
                     availableCapacity = sys.maxsize
-
                     for session in sessions:
                         availableCapacity = min(availableCapacity,int(session["available_capacity"]))
                         vaccines[session["vaccine"]] = True
                         minAge[session["min_age_limit"]] = True
-                    if minAge[18]:
-                        tweetAt(availableCapacity,vaccines,pin,date,18)
-                    if minAge[45]:
-                        tweetAt(availableCapacity,vaccines,pin,date,45)
+                        if minAge[18]:
+                            logger.info("Tweeting 18")
+                            await tweetAt(availableCapacity,vaccines,pin,date,18)
+                        if minAge[45]:
+                            logger.info("Tweeting 45")
+                            await tweetAt(availableCapacity,vaccines,pin,date,45)
+                            logger.info("Tweeted")
 
                 logger.info("Waiting...For COWIN")
-                await asyncio.sleep(3)
-            except:
+            except Exception as e:
+                print(e)
                 logger.info("Failed to get new sessions")
                 logger.info("Waiting...For COWIN")
-                await asyncio.sleep(3)
+            await asyncio.sleep(3)
 
 
-def tweetAt(availableCapacity,vaccines,pin,date,age):
+
+async def tweetAt(availableCapacity,vaccines,pin,date,age):
     coDF= pd.read_csv("UserData.csv")
     reply = "Atleast " + str(availableCapacity) + " slot(s) for " + " and ".join([v for v,b in vaccines.items() if b == True]) + " is available for age " + str(age) + "+ at pin " + str(pin) + " for " + date
     tweetIDs = coDF.loc[(df["Age"]==age) & (coDF["Pin"]==pin),["TweetID"]]
     for tweetID in tweetIDs.TweetID:
         username = coDF.loc[coDF["TweetID"]==tweetID,["Username"]].Username.item()
         tweet = ".@" + username + " " + reply
+        logger.info(tweet)
         alert = coDF.loc[coDF["TweetID"]==tweetID, ["Alert"]].Alert.item()
         if pd.isna(alert) or int(datetime.datetime.now().strftime("%d%H%M")) - alert > 100:
-            logger.info("Tweeting",reply)
+            logger.info("Tweeting")
             api.update_status(tweet,tweetID)
             coDF.loc[coDF["TweetID"]==tweetID,"Alert"]  = int(datetime.datetime.now().strftime("%d%H%M"))
 
