@@ -145,16 +145,17 @@ def download_file(url):
     return local_filename
 
 async def run():
+    today = timezone.localize(datetime.datetime.today())
+    tomorrow = today + datetime.timedelta(days=1)
+    dayAfter = today + datetime.timedelta(days=2)
+    global dates
+    dates = [today.strftime("%d-%m-%Y"), tomorrow.strftime("%d-%m-%Y"), dayAfter.strftime("%d-%m-%Y")]
     await asyncio.gather(checkMentions(),checkCowin())
     if 52000 == int(today.strftime("%w%H%M")):
         await updatePeopleVaccinated()
     await run()
 
 if __name__ == "__main__":
-    today = timezone.localize(datetime.datetime.today())
-    tomorrow = today + datetime.timedelta(days=1)
-    dayAfter = today + datetime.timedelta(days=2)
-    dates = [today.strftime("%d-%m-%Y"), tomorrow.strftime("%d-%m-%Y"), dayAfter.strftime("%d-%m-%Y")]
     failedTweet = [1389616776728645636]
 
     clean = False
