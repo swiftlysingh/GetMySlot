@@ -40,7 +40,6 @@ async def checkMentions():
                 api.update_status(reply,tweetID)
                 df = df.append({ "Username": username,"TweetID": tweetID, "Pin": pin, "Age": age},ignore_index=True)
                 df.to_csv("UserData.csv", index=False)
-                print(df.head())
                 logger.info(str(pin),str(age),username,str(tweetID))
             except:
                 reply = "@" + username + " " + 'There seems to be an error. Please make sure your tweet is in the following format ' + "errorid:" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
@@ -79,13 +78,10 @@ async def checkCowin():
                         availableCapacity = min(availableCapacity,int(session["available_capacity"]))
                         vaccines[session["vaccine"]] = True
                         minAge[session["min_age_limit"]] = True
-                        print("Still Working",minAge)
                     if minAge[18]:
                         tweetAt(availableCapacity,vaccines,pin,date,18)
                     if minAge[45]:
-                        print(availableCapacity,vaccines,pin,date,45)
                         tweetAt(availableCapacity,vaccines,pin,date,45)
-                        print("Tweeting")
 
                 logger.info("Waiting...For COWIN")
                 await asyncio.sleep(3)
@@ -103,10 +99,8 @@ def tweetAt(availableCapacity,vaccines,pin,date,age):
         username = coDF.loc[coDF["TweetID"]==tweetID,["Username"]].Username.item()
         tweet = ".@" + username + " " + reply
         alert = coDF.loc[coDF["TweetID"]==tweetID, ["Alert"]].Alert.item()
-        print(alert)
         if pd.isna(alert) or int(datetime.datetime.now().strftime("%d%H%M")) - alert > 100:
-            print("Tweeting")
-            print(tweetID)
+            logger.info("Tweeting",reply)
             api.update_status(tweet,tweetID)
             coDF.loc[coDF["TweetID"]==tweetID,"Alert"]  = int(datetime.datetime.now().strftime("%d%H%M"))
 
