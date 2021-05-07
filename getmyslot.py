@@ -87,7 +87,7 @@ async def checkCowin():
                 await asyncio.sleep(3)
                 logger.info("COWIN Wait over")
             except Exception as e:
-                logger.info(e)
+                logger.error(e)
                 logger.info("Failed to get new sessions")
                 logger.info("Waiting...For COWIN")
                 await asyncio.sleep(3)
