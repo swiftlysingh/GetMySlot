@@ -7,9 +7,9 @@
 
 GetMySlot is an open-source python based twitter bot that provides updates for covid vaccine slots in your locality. GetMySlot also provides weekly updates about percentage of people vaccinated. It will soon be able to provide news and updates regarding all India's vaccination drive.
 
-Just your friendly neighbourhood bot that will notify you once there
-is an open slot for COVID vaccine near you. Tweet at me with subscribe
-<Pincode\> <18+/45+> and I will keep you updated.
+To try it out, tweet at [GetMySlot](https://twitter.com/getmyslot) with your pincode and age group and it will keep you updated. Follow the following tweet format. 
+
+![Tweet Scheme](https://pbs.twimg.com/media/E0o4uSvVIAMTBDd?format=jpg&name=large)
 
 The project uses test-drive agile development processes, where requirements are turned into test cases, and code is improved upon. 
 
