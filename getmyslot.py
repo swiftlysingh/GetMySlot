@@ -40,7 +40,8 @@ async def checkMentions():
                 api.update_status(reply,tweetID)
                 df = df.append({ "Username": username,"TweetID": tweetID, "Pin": pin, "Age": age},ignore_index=True)
                 df.to_csv("UserData.csv", index=False)
-                logger.info(str(pin),str(age),username,str(tweetID))
+                log = ",".join(str(pin),str(age),username,str(tweetID))
+                logger.info(log)
             except:
                 reply = "@" + username + " " + 'There seems to be an error. Please make sure your tweet is in the following format ' + "errorid:" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
                 file = open("ss.jpeg" , "rb")
@@ -153,9 +154,17 @@ async def run():
     dayAfter = today + datetime.timedelta(days=2)
     global dates
     dates = [today.strftime("%d-%m-%Y"), tomorrow.strftime("%d-%m-%Y"), dayAfter.strftime("%d-%m-%Y")]
-    await asyncio.gather(checkMentions(),checkCowin())
+    try:
+        await asyncio.gather(checkMentions(),checkCowin())
+    except Exception as e:
+        logger.error(e)
+        logger.error("Falied to call Check Mentions and Cowin")
     if 52000 == int(today.strftime("%w%H%M")):
-        await updatePeopleVaccinated()
+        try:
+            await updatePeopleVaccinated()
+        except Exception as e:
+            ogger.error(e)
+            logger.error("Falied to tweet percentage")
     await run()
 
 if __name__ == "__main__":
