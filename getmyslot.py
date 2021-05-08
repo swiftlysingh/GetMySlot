@@ -66,7 +66,8 @@ async def checkCowin():
             completeURL = baseURL+"date="+date + "&pincode=" + str(pin)
             try:
                 logger.info("Getting sessions")
-                sessions = requests.get(completeURL).json()["sessions"]
+                headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/81.0'}
+                sessions = requests.get(completeURL,headers=headers).json()["sessions"]
                 print(sessions)
                 logger.info("Got Sessions")
                 if sessions:
