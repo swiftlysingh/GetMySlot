@@ -156,16 +156,13 @@ async def run():
     dates = [today.strftime("%d-%m-%Y"), tomorrow.strftime("%d-%m-%Y"), dayAfter.strftime("%d-%m-%Y")]
     try:
         await asyncio.gather(checkMentions(),checkCowin())
+        if 52000 == int(today.strftime("%w%H%M")):
+            await updatePeopleVaccinated()
     except Exception as e:
         logger.error(e)
         logger.error("Falied to call Check Mentions and Cowin")
-    if 52000 == int(today.strftime("%w%H%M")):
-        try:
-            await updatePeopleVaccinated()
-        except Exception as e:
-            ogger.error(e)
-            logger.error("Falied to tweet percentage")
-    await run()
+    finally:
+        await run()
 
 if __name__ == "__main__":
     failedTweet = [1389616776728645636]
