@@ -161,6 +161,7 @@ async def run():
     except Exception as e:
         logger.error(e)
         logger.error("Falied to call Check Mentions and Cowin")
+        await asyncio.sleep(30)
     finally:
         await run()
 
