@@ -40,7 +40,7 @@ async def checkMentions():
                 api.update_status(reply,tweetID)
                 df = df.append({ "Username": username,"TweetID": tweetID, "Pin": pin, "Age": age},ignore_index=True)
                 df.to_csv("UserData.csv", index=False)
-                log = ",".join(str(pin),str(age),username,str(tweetID))
+                log = ",".join((str(pin),str(age),username,str(tweetID)))
                 logger.info(log)
             except:
                 reply = "@" + username + " " + 'There seems to be an error. Please make sure your tweet is in the following format ' + "errorid:" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
