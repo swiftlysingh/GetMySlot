@@ -1,4 +1,5 @@
-[![Twitter](https://img.shields.io/badge/Twitter-skyblue.svg?style=for-the-badge&logo=twitter)](https://twitter.com/getmyslot)
+[![Twitter](https://img.shields.io/badge/Twitter-skyblue.svg?style=for-the-badge&logo=twitter)](https://twitter.com/getmyslot) [![Blog](https://img.shields.io/badge/SwiftlySingh-How%20I%20made%20this%20%20bot-black?style=for-the-badge)](https://swiftlysingh.com/the-story-of-my-first-bot/)
+
 
 # [](https://twitter.com/getmyslot)GetMySlot
 ### [](https://twitter.com/getmyslot)A twitter bot that will help you get your very own Vaccine Slot!!! 🤖
